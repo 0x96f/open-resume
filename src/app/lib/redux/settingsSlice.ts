@@ -37,8 +37,8 @@ export type GeneralSetting = Exclude<
 >;
 
 export const DEFAULT_THEME_COLOR = "#38bdf8"; // sky-400
-export const DEFAULT_FONT_FAMILY = "Roboto";
-export const DEFAULT_FONT_SIZE = "11"; // text-base https://tailwindcss.com/docs/font-size
+const DEFAULT_FONT_FAMILY = "Roboto";
+const DEFAULT_FONT_SIZE = "11"; // text-base https://tailwindcss.com/docs/font-size
 export const DEFAULT_FONT_COLOR = "#171717"; // text-neutral-800
 
 export const initialSettings: Settings = {
@@ -69,7 +69,7 @@ export const initialSettings: Settings = {
   },
 };
 
-export const settingsSlice = createSlice({
+const settingsSlice = createSlice({
   name: "settings",
   initialState: initialSettings,
   reducers: {
@@ -139,12 +139,9 @@ export const {
 export const selectSettings = (state: RootState) => state.settings;
 export const selectThemeColor = (state: RootState) => state.settings.themeColor;
 
-export const selectFormToShow = (state: RootState) => state.settings.formToShow;
 export const selectShowByForm = (form: ShowForm) => (state: RootState) =>
   state.settings.formToShow[form];
 
-export const selectFormToHeading = (state: RootState) =>
-  state.settings.formToHeading;
 export const selectHeadingByForm = (form: ShowForm) => (state: RootState) =>
   state.settings.formToHeading[form];
 

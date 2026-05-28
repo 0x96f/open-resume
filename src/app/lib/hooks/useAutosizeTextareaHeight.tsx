@@ -28,7 +28,7 @@ export const useAutosizeTextareaHeight = ({ value }: { value: string }) => {
 
   // Resize height when viewport resizes
   useEffect(() => {
-    window.addEventListener("resize", resizeHeight);
+    window.addEventListener("resize", resizeHeight, { passive: true });
     return () => window.removeEventListener("resize", resizeHeight);
   }, []);
 

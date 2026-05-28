@@ -41,16 +41,16 @@ export const initialProject: ResumeProject = {
   descriptions: [],
 };
 
-export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };
+const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };
 export const initialFeaturedSkills: FeaturedSkill[] = Array(6).fill({
   ...initialFeaturedSkill,
 });
-export const initialSkills: ResumeSkills = {
+const initialSkills: ResumeSkills = {
   featuredSkills: initialFeaturedSkills,
   descriptions: [],
 };
 
-export const initialCustom = {
+const initialCustom = {
   descriptions: [],
 };
 
@@ -64,7 +64,7 @@ export const initialResumeState: Resume = {
 };
 
 // Keep the field & value type in sync with CreateHandleChangeArgsWithDescriptions (components\ResumeForm\types.ts)
-export type CreateChangeActionWithDescriptions<T> = {
+type CreateChangeActionWithDescriptions<T> = {
   idx: number;
 } & (
   | {
@@ -74,7 +74,7 @@ export type CreateChangeActionWithDescriptions<T> = {
   | { field: "descriptions"; value: string[] }
 );
 
-export const resumeSlice = createSlice({
+const resumeSlice = createSlice({
   name: "resume",
   initialState: initialResumeState,
   reducers: {

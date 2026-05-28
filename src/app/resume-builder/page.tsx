@@ -1,8 +1,13 @@
 "use client";
+import dynamic from "next/dynamic";
 import { Provider } from "react-redux";
 import { store } from "lib/redux/store";
 import { ResumeForm } from "components/ResumeForm";
-import { Resume } from "components/Resume";
+
+const Resume = dynamic(
+  () => import("components/Resume").then((mod) => mod.Resume),
+  { ssr: false }
+);
 
 export default function Create() {
   return (

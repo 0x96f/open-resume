@@ -1,33 +1,29 @@
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
-const enum TailwindBreakpoint {
-  sm = 640,
-  md = 768,
-  lg = 1024,
-  xl = 1280,
-  "2xl" = 1536,
-}
+const LG_BREAKPOINT_PX = 1024;
+
+const useMediaQuery = (query: string) => {
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const mediaQueryList = window.matchMedia(query);
+      mediaQueryList.addEventListener("change", callback);
+      return () => mediaQueryList.removeEventListener("change", callback);
+    },
+    [query]
+  );
+
+  const getSnapshot = useCallback(
+    () => window.matchMedia(query).matches,
+    [query]
+  );
+
+  const getServerSnapshot = useCallback(() => false, []);
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+};
 
 export const useTailwindBreakpoints = () => {
-  const [isSm, setIsSm] = useState(false);
-  const [isMd, setIsMd] = useState(false);
-  const [isLg, setIsLg] = useState(false);
-  const [isXl, setIsXl] = useState(false);
-  const [is2xl, setIs2xl] = useState(false);
+  const isLg = useMediaQuery(`(min-width: ${LG_BREAKPOINT_PX}px)`);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      setIsSm(screenWidth >= TailwindBreakpoint.sm);
-      setIsMd(screenWidth >= TailwindBreakpoint.md);
-      setIsLg(screenWidth >= TailwindBreakpoint.lg);
-      setIsXl(screenWidth >= TailwindBreakpoint.xl);
-      setIs2xl(screenWidth >= TailwindBreakpoint["2xl"]);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return { isSm, isMd, isLg, isXl, is2xl };
+  return { isLg };
 };

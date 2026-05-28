@@ -29,7 +29,7 @@ export type FeatureSet =
       ReturnMatchingTextOnly
     ];
 
-export interface TextScore {
+interface TextScore {
   text: string;
   score: number;
   match: boolean;

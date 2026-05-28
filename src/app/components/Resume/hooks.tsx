@@ -50,7 +50,7 @@ export const useSetDefaultScale = ({
 
     if (scaleOnResize) {
       setDefaultScale();
-      window.addEventListener("resize", setDefaultScale);
+      window.addEventListener("resize", setDefaultScale, { passive: true });
     }
 
     return () => {

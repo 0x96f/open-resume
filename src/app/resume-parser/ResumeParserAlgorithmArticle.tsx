@@ -20,7 +20,7 @@ const Scores = ({ scores }: { scores: TextScores }) => {
   return (
     <>
       {scores
-        .sort((a, b) => b.score - a.score)
+        .toSorted((a, b) => b.score - a.score)
         .map((item, idx) => (
           <span key={idx} className="break-all">
             <Badge>{item.score}</Badge> {item.text}

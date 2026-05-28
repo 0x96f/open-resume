@@ -2,23 +2,72 @@ import type { RootState } from "lib/redux/store";
 
 // Reference: https://dev.to/igorovic/simplest-way-to-persist-redux-state-to-localstorage-e67
 
-const LOCAL_STORAGE_KEY = "open-resume-state";
+const LEGACY_LOCAL_STORAGE_KEY = "open-resume-state";
+const LOCAL_STORAGE_KEY = "open-resume-state:v1";
 
-export const loadStateFromLocalStorage = () => {
+type PersistedState = Pick<RootState, "resume" | "settings">;
+
+let cachedState: PersistedState | null | undefined;
+
+const readRawFromStorage = (key: string): PersistedState | null => {
   try {
-    const stringifiedState = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (!stringifiedState) return undefined;
-    return JSON.parse(stringifiedState);
-  } catch (e) {
-    return undefined;
+    const stringifiedState = localStorage.getItem(key);
+    if (!stringifiedState) return null;
+    return JSON.parse(stringifiedState) as PersistedState;
+  } catch {
+    return null;
   }
 };
 
-export const saveStateToLocalStorage = (state: RootState) => {
+const migrateLegacyState = (): PersistedState | null => {
+  const legacyState = readRawFromStorage(LEGACY_LOCAL_STORAGE_KEY);
+  if (!legacyState) return null;
+
   try {
-    const stringifiedState = JSON.stringify(state);
-    localStorage.setItem(LOCAL_STORAGE_KEY, stringifiedState);
-  } catch (e) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(legacyState));
+    localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEY);
+  } catch {
+    // Ignore quota / private browsing errors during migration
+  }
+
+  return legacyState;
+};
+
+const loadPersistedState = (): PersistedState | null => {
+  return readRawFromStorage(LOCAL_STORAGE_KEY) ?? migrateLegacyState();
+};
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (
+      event.key === LOCAL_STORAGE_KEY ||
+      event.key === LEGACY_LOCAL_STORAGE_KEY
+    ) {
+      cachedState = undefined;
+    }
+  });
+}
+
+export const loadStateFromLocalStorage = (): PersistedState | undefined => {
+  if (cachedState !== undefined) {
+    return cachedState ?? undefined;
+  }
+
+  const state = loadPersistedState();
+  cachedState = state;
+  return state ?? undefined;
+};
+
+export const saveStateToLocalStorage = (state: RootState) => {
+  const persistedState: PersistedState = {
+    resume: state.resume,
+    settings: state.settings,
+  };
+
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(persistedState));
+    cachedState = persistedState;
+  } catch {
     // Ignore
   }
 };

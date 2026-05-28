@@ -5,6 +5,12 @@ import Image from "next/image";
 import logoSrc from "public/logo.svg";
 import { cx } from "lib/cx";
 
+const preloadResumeBuilder = () => {
+  if (typeof window !== "undefined") {
+    void import("components/Resume");
+  }
+};
+
 export const TopNavBar = () => {
   const pathName = usePathname();
   const isHomePage = pathName === "/";
@@ -39,6 +45,12 @@ export const TopNavBar = () => {
               key={text}
               className="rounded-md px-1.5 py-2 text-gray-500 hover:bg-gray-100 focus-visible:bg-gray-100 lg:px-4"
               href={href}
+              onMouseEnter={
+                href === "/resume-builder" ? preloadResumeBuilder : undefined
+              }
+              onFocus={
+                href === "/resume-builder" ? preloadResumeBuilder : undefined
+              }
             >
               {text}
             </Link>

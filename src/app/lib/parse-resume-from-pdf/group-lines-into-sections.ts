@@ -10,7 +10,7 @@ import {
   isBold,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 
-export const PROFILE_SECTION: ResumeKey = "profile";
+const PROFILE_SECTION: ResumeKey = "profile";
 
 /**
  * Step 3. Group lines into sections

@@ -9,17 +9,13 @@ const isAnchor = (props: ButtonProps): props is ReactAnchorProps => {
   return "href" in props;
 };
 
-export const Button = (props: ButtonProps) => {
+const Button = (props: ButtonProps) => {
   if (isAnchor(props)) {
     return <a {...props} />;
   } else {
     return <button type="button" {...props} />;
   }
 };
-
-export const PrimaryButton = ({ className, ...props }: ButtonProps) => (
-  <Button className={cx("btn-primary", className)} {...props} />
-);
 
 type IconButtonProps = ButtonProps & {
   size?: "small" | "medium";

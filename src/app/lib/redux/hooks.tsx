@@ -21,15 +21,45 @@ import type { Resume } from "lib/redux/types";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+function scheduleIdleWork(callback: () => void): number {
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+    return window.requestIdleCallback(callback, { timeout: 2000 });
+  }
+  return setTimeout(callback, 500) as unknown as number;
+}
+
+function cancelIdleWork(id: number) {
+  if (typeof window !== "undefined" && "cancelIdleCallback" in window) {
+    window.cancelIdleCallback(id);
+  } else {
+    clearTimeout(id);
+  }
+}
+
 /**
  * Hook to save store to local storage on store change
  */
 export const useSaveStateToLocalStorageOnChange = () => {
   useEffect(() => {
+    let idleCallbackId: number | undefined;
+
     const unsubscribe = store.subscribe(() => {
-      saveStateToLocalStorage(store.getState());
+      if (idleCallbackId !== undefined) {
+        cancelIdleWork(idleCallbackId);
+      }
+
+      idleCallbackId = scheduleIdleWork(() => {
+        saveStateToLocalStorage(store.getState());
+        idleCallbackId = undefined;
+      });
     });
-    return unsubscribe;
+
+    return () => {
+      unsubscribe();
+      if (idleCallbackId !== undefined) {
+        cancelIdleWork(idleCallbackId);
+      }
+    };
   }, []);
 };
 
@@ -55,5 +85,5 @@ export const useSetInitialStore = () => {
       ) as Settings;
       dispatch(setSettings(mergedSettingsState));
     }
-  }, []);
+  }, [dispatch]);
 };

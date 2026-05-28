@@ -46,15 +46,3 @@ export function* makeObjectCharIterator<T extends Object>(
     }
   }
 }
-
-export const countObjectChar = (object: Object) => {
-  let count = 0;
-  for (const value of Object.values(object)) {
-    if (typeof value === "object") {
-      count += countObjectChar(value);
-    } else if (typeof value === "string") {
-      count += value.length;
-    }
-  }
-  return count;
-};
