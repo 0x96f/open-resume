@@ -1,11 +1,11 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, type ReactElement } from "react";
 import { useSetDefaultScale } from "components/Resume/hooks";
 import {
   MagnifyingGlassIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
-import { usePDF } from "@react-pdf/renderer";
+import { usePDF, type DocumentProps } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
 
 const ResumeControlBar = ({
@@ -18,7 +18,7 @@ const ResumeControlBar = ({
   scale: number;
   setScale: (scale: number) => void;
   documentSize: string;
-  document: JSX.Element;
+  document: ReactElement<DocumentProps>;
   fileName: string;
 }) => {
   const { scaleOnResize, setScaleOnResize } = useSetDefaultScale({
@@ -30,7 +30,7 @@ const ResumeControlBar = ({
 
   // Hook to update pdf when document changes
   useEffect(() => {
-    update();
+    update(document);
   }, [update, document]);
 
   return (

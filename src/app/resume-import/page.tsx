@@ -1,19 +1,19 @@
 "use client";
+import { useState, useSyncExternalStore } from "react";
 import { getHasUsedAppBefore } from "lib/redux/local-storage";
 import { ResumeDropzone } from "components/ResumeDropzone";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function ImportResume() {
-  const [hasUsedAppBefore, setHasUsedAppBefore] = useState(false);
+  const hasUsedAppBefore = useSyncExternalStore(
+    () => () => {},
+    getHasUsedAppBefore,
+    () => false
+  );
   const [hasAddedResume, setHasAddedResume] = useState(false);
   const onFileUrlChange = (fileUrl: string) => {
     setHasAddedResume(Boolean(fileUrl));
   };
-
-  useEffect(() => {
-    setHasUsedAppBefore(getHasUsedAppBefore());
-  }, []);
 
   return (
     <main>

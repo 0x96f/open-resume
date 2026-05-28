@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import {
   useAppSelector,
   useSaveStateToLocalStorageOnChange,
@@ -16,7 +16,7 @@ import { CustomForm } from "components/ResumeForm/CustomForm";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { cx } from "lib/cx";
 
-const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
+const formTypeToComponent: { [type in ShowForm]: () => ReactElement } = {
   workExperiences: WorkExperiencesForm,
   educations: EducationsForm,
   projects: ProjectsForm,

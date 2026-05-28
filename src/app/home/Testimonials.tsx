@@ -3,7 +3,7 @@ import heartSrc from "public/assets/heart.svg";
 import testimonialSpiegelSrc from "public/assets/testimonial-spiegel.jpg";
 import testimonialSantiSrc from "public/assets/testimonial-santi.jpg";
 import testimonialVivianSrc from "public/assets/testimonial-vivian.jpg";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useTailwindBreakpoints } from "lib/hooks/useTailwindBreakpoints";
 
@@ -40,27 +40,29 @@ const SM_TESTIMONIALS_CLASSNAMES = ["z-10", "opacity-0", "opacity-0"];
 const ROTATION_INTERVAL_MS = 8 * 1000; // 8s
 
 export const Testimonials = ({ children }: { children?: React.ReactNode }) => {
-  const [testimonialsClassNames, setTestimonialsClassNames] = useState(
-    LG_TESTIMONIALS_CLASSNAMES
-  );
+  const { isLg } = useTailwindBreakpoints();
+  const layoutClassNames = isLg
+    ? LG_TESTIMONIALS_CLASSNAMES
+    : SM_TESTIMONIALS_CLASSNAMES;
+  const [rotation, setRotation] = useState(0);
   const isHoveredOnTestimonial = useRef(false);
+  const testimonialsClassNames = useMemo(() => {
+    const offset = rotation % 3;
+    return [
+      layoutClassNames[offset],
+      layoutClassNames[(offset + 1) % 3],
+      layoutClassNames[(offset + 2) % 3],
+    ];
+  }, [layoutClassNames, rotation]);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!isHoveredOnTestimonial.current) {
-        setTestimonialsClassNames((preClassNames) => {
-          return [preClassNames[1], preClassNames[2], preClassNames[0]];
-        });
+        setRotation((currentRotation) => currentRotation + 1);
       }
     }, ROTATION_INTERVAL_MS);
     return () => clearInterval(intervalId);
   }, []);
-
-  const { isLg } = useTailwindBreakpoints();
-  useEffect(() => {
-    setTestimonialsClassNames(
-      isLg ? LG_TESTIMONIALS_CLASSNAMES : SM_TESTIMONIALS_CLASSNAMES
-    );
-  }, [isLg]);
 
   return (
     <section className="mx-auto -mt-2 px-8 pb-24">

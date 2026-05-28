@@ -16,6 +16,21 @@ import type {
 } from "lib/parse-resume-from-pdf/types";
 import { extractProfile } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-profile";
 
+const Scores = ({ scores }: { scores: TextScores }) => {
+  return (
+    <>
+      {scores
+        .sort((a, b) => b.score - a.score)
+        .map((item, idx) => (
+          <span key={idx} className="break-all">
+            <Badge>{item.score}</Badge> {item.text}
+            <br />
+          </span>
+        ))}
+    </>
+  );
+};
+
 export const ResumeParserAlgorithmArticle = ({
   textItems,
   lines,
@@ -68,20 +83,6 @@ export const ResumeParserAlgorithmArticle = ({
   ];
 
   const { profile, profileScores } = extractProfile(sections);
-  const Scores = ({ scores }: { scores: TextScores }) => {
-    return (
-      <>
-        {scores
-          .sort((a, b) => b.score - a.score)
-          .map((item, idx) => (
-            <span key={idx} className="break-all">
-              <Badge>{item.score}</Badge> {item.text}
-              <br />
-            </span>
-          ))}
-      </>
-    );
-  };
   const step4ProfileFeatureScoresTable = [
     [
       "Resume Attribute",

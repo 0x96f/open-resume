@@ -8,11 +8,5 @@ module.exports = {
       },
     },
   },
-  corePlugins: {
-    aspectRatio: false,
-  },
-  plugins: [
-    require("tailwind-scrollbar")({ nocompatible: true }),
-    require("@tailwindcss/aspect-ratio"),
-  ],
+  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
 };

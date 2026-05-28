@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ContentEditable from "react-contenteditable";
 import { useAutosizeTextareaHeight } from "lib/hooks/useAutosizeTextareaHeight";
 
@@ -84,17 +84,16 @@ export const Textarea = <T extends string>({
 export const BulletListTextarea = <T extends string>(
   props: InputProps<T, string[]> & { showBulletPoints?: boolean }
 ) => {
-  const [showFallback, setShowFallback] = useState(false);
-
-  useEffect(() => {
+  const [showFallback] = useState(() => {
+    if (typeof navigator === "undefined") {
+      return false;
+    }
     const isFirefox = navigator.userAgent.includes("Firefox");
     const isSafari =
       navigator.userAgent.includes("Safari") &&
-      !navigator.userAgent.includes("Chrome"); // Note that Chrome also includes Safari in its userAgent
-    if (isFirefox || isSafari) {
-      setShowFallback(true);
-    }
-  }, []);
+      !navigator.userAgent.includes("Chrome");
+    return isFirefox || isSafari;
+  });
 
   if (showFallback) {
     return <BulletListTextareaFallback {...props} />;
