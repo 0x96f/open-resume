@@ -40,7 +40,7 @@ export const ProjectsForm = () => {
             <Input
               name="project"
               label="Project Name"
-              placeholder="OpenResume"
+              placeholder="Project name"
               value={project}
               onChange={handleProjectChange}
               labelClassName="col-span-4"
@@ -48,7 +48,7 @@ export const ProjectsForm = () => {
             <Input
               name="date"
               label="Date"
-              placeholder="Winter 2022"
+              placeholder="Date"
               value={date}
               onChange={handleProjectChange}
               labelClassName="col-span-2"
@@ -56,7 +56,7 @@ export const ProjectsForm = () => {
             <BulletListTextarea
               name="descriptions"
               label="Description"
-              placeholder="Bullet points"
+              placeholder="Project description and contributions"
               value={descriptions}
               onChange={handleProjectChange}
               labelClassName="col-span-full"

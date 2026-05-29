@@ -43,7 +43,7 @@ export const SkillsForm = () => {
             label="Skills List"
             labelClassName="col-span-full"
             name="descriptions"
-            placeholder="Bullet points"
+            placeholder="List your skills"
             value={descriptions}
             onChange={handleSkillsChange}
             showBulletPoints={showBulletPoints}
@@ -75,7 +75,7 @@ export const SkillsForm = () => {
             setSkillRating={(newSkill, newRating) => {
               handleFeaturedSkillsChange(idx, newSkill, newRating);
             }}
-            placeholder={`Featured Skill ${idx + 1}`}
+            placeholder="Skill name"
             circleColor={themeColor}
           />
         ))}

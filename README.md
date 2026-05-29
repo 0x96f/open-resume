@@ -4,6 +4,8 @@ OpenResume is a powerful open-source resume builder.
 
 The goal of OpenResume is to provide everyone with free access to a modern professional resume design and enable anyone to apply for jobs with confidence.
 
+This project is a fork of [xitanggg/open-resume](https://github.com/xitanggg/open-resume), originally created by [Xitang Zhao](https://github.com/xitanggg).
+
 Official site: [https://open-resume.com](https://open-resume.com)
 
 ## ⚒️ Resume Builder
@@ -38,7 +40,7 @@ OpenResume is created with the NextJS web framework and follows its project stru
 
 | <div style="width:115px">**Page Route**</div> | **Code Path** | **Description** |
 |---|---|---|
-| / | /page.tsx | Home page that contains hero, auto typing resume, steps, testimonials, logo cloud, etc |
+| / | /page.tsx | Home page that contains hero, auto typing resume, steps, and features |
 | /resume-import | /resume-import/page.tsx | Resume import page to restore a previously exported JSON file. The main component used is `ResumeDropzone` (`/components/ResumeDropzone.tsx`) |
 | /resume-builder | /resume-builder/page.tsx | Resume builder page to build and download a resume PDF. The main components used are `ResumeForm` (`/components/ResumeForm`) and `Resume` (`/components/Resume`) |
 

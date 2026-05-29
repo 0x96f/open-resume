@@ -48,7 +48,7 @@ export const WorkExperiencesForm = () => {
               label="Company"
               labelClassName="col-span-full"
               name="company"
-              placeholder="Khan Academy"
+              placeholder="Company name"
               value={company}
               onChange={handleWorkExperienceChange}
             />
@@ -56,7 +56,7 @@ export const WorkExperiencesForm = () => {
               label="Job Title"
               labelClassName="col-span-4"
               name="jobTitle"
-              placeholder="Software Engineer"
+              placeholder="Job title"
               value={jobTitle}
               onChange={handleWorkExperienceChange}
             />
@@ -64,7 +64,7 @@ export const WorkExperiencesForm = () => {
               label="Date"
               labelClassName="col-span-2"
               name="date"
-              placeholder="Jun 2022 - Present"
+              placeholder="Start date - End date"
               value={date}
               onChange={handleWorkExperienceChange}
             />
@@ -72,7 +72,7 @@ export const WorkExperiencesForm = () => {
               label="Description"
               labelClassName="col-span-full"
               name="descriptions"
-              placeholder="Bullet points"
+              placeholder="Responsibilities and achievements"
               value={descriptions}
               onChange={handleWorkExperienceChange}
             />
