@@ -4,7 +4,7 @@ import { Features } from "home/Features";
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-screen-2xl bg-dot px-8 pb-16 text-gray-900 lg:px-12">
+    <main className="mx-auto max-w-screen-xl bg-dot px-8 pb-16 text-gray-900 lg:px-12">
       <Hero />
       <Steps />
       <Features />

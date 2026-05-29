@@ -8,26 +8,29 @@
     @apply bg-primary outline-theme-purple inline-block rounded-full px-6 py-2 font-semibold shadow-sm;
   }
   .text-primary {
-    @apply bg-gradient-to-r from-[color:var(--theme-purple)] to-[color:var(--theme-blue)] bg-clip-text text-transparent !important;
+    @apply bg-gradient-to-r from-[color:var(--theme-primary)] to-[color:var(--theme-secondary)] bg-clip-text text-transparent !important;
   }
   .bg-primary {
-    @apply bg-gradient-to-r from-[color:var(--theme-purple)] to-[color:var(--theme-blue)] text-white;
+    @apply bg-gradient-to-r from-[color:var(--theme-primary)] to-[color:var(--theme-secondary)] text-white;
   }
   .outline-theme-purple {
-    @apply hover:opacity-80 hover:outline-[color:var(--theme-purple)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--theme-purple)];
+    @apply hover:opacity-80 hover:outline-[color:var(--theme-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--theme-primary)];
   }
   .outline-theme-blue {
-    @apply hover:opacity-80 hover:outline-[color:var(--theme-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--theme-blue)];
+    @apply hover:opacity-80 hover:outline-[color:var(--theme-secondary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--theme-secondary)];
   }
   .within-outline-theme-purple {
-    @apply focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[color:var(--theme-purple)] hover:opacity-80 hover:outline-[color:var(--theme-purple)];
+    @apply focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[color:var(--theme-primary)] hover:opacity-80 hover:outline-[color:var(--theme-primary)];
   }
 }
 
 :root {
-  --theme-purple: #5d52d9;
-  --theme-blue: #4fc5eb;
-  /* Keep the below variable names in sync with CSS_VARIABLES in globals-css.ts */
+  --theme-primary: #262326;
+  --theme-secondary: #534d53;
+  --color-primary: var(--theme-primary);
+  --color-surface: #ffffff;
+  --radius-md: 0.375rem;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --top-nav-bar-height: 3.5rem;
   --resume-control-bar-height: 3rem;
   --resume-padding: 1.5rem;

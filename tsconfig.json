@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,20 +14,16 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "baseUrl": "./src/app",
-    // Path Mapping Doc: https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
+    "plugins": [{ "name": "next" }],
+    "baseUrl": "./src",
     "paths": {
-      "public/*": [
-        "../../public/*"
-      ],
-      "*": [
-        "*"
-      ]
+      "@/*": ["./*"],
+      "components/*": ["features/resume/components/*", "components/*"],
+      "lib/*": ["lib/*"],
+      "home/*": ["features/marketing/*"],
+      "public/*": ["../public/*"],
+      "globals.css": ["app/globals.css"],
+      "globals-css": ["app/globals-css.ts"]
     }
   },
   "include": [
@@ -41,7 +33,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
