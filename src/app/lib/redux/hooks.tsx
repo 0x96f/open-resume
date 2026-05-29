@@ -6,6 +6,7 @@ import {
 } from "react-redux";
 import { store, type RootState, type AppDispatch } from "lib/redux/store";
 import {
+  clearPersistedState,
   loadStateFromLocalStorage,
   saveStateToLocalStorage,
 } from "lib/redux/local-storage";
@@ -61,6 +62,12 @@ export const useSaveStateToLocalStorageOnChange = () => {
       }
     };
   }, []);
+};
+
+export const resetAppState = () => {
+  clearPersistedState();
+  store.dispatch(setResume(initialResumeState));
+  store.dispatch(setSettings(initialSettings));
 };
 
 export const useSetInitialStore = () => {

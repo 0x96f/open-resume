@@ -194,6 +194,26 @@ const resumeSlice = createSlice({
         draft[form].splice(idx, 1);
       }
     },
+    clearSectionInForm: (draft, action: PayloadAction<{ form: ShowForm }>) => {
+      const { form } = action.payload;
+      switch (form) {
+        case "workExperiences":
+          draft.workExperiences = [structuredClone(initialWorkExperience)];
+          break;
+        case "educations":
+          draft.educations = [structuredClone(initialEducation)];
+          break;
+        case "projects":
+          draft.projects = [structuredClone(initialProject)];
+          break;
+        case "skills":
+          draft.skills = structuredClone(initialSkills);
+          break;
+        case "custom":
+          draft.custom = structuredClone(initialCustom);
+          break;
+      }
+    },
     setResume: (draft, action: PayloadAction<Resume>) => {
       return action.payload;
     },
@@ -210,6 +230,7 @@ export const {
   addSectionInForm,
   moveSectionInForm,
   deleteSectionInFormByIdx,
+  clearSectionInForm,
   setResume,
 } = resumeSlice.actions;
 

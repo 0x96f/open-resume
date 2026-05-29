@@ -7,6 +7,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { usePDF, type DocumentProps } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
+import {
+  downloadPersistedStateAsJson,
+  type PersistedState,
+} from "lib/redux/local-storage";
 
 const ResumeControlBar = ({
   scale,
@@ -14,12 +18,14 @@ const ResumeControlBar = ({
   documentSize,
   document,
   fileName,
+  persistedState,
 }: {
   scale: number;
   setScale: (scale: number) => void;
   documentSize: string;
   document: ReactElement<DocumentProps>;
   fileName: string;
+  persistedState?: PersistedState;
 }) => {
   const { scaleOnResize, setScaleOnResize } = useSetDefaultScale({
     setScale,
@@ -59,14 +65,29 @@ const ResumeControlBar = ({
           <span className="select-none">Autoscale</span>
         </label>
       </div>
-      <a
-        className="ml-1 flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100 lg:ml-8"
-        href={instance.url!}
-        download={fileName}
-      >
-        <ArrowDownTrayIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Download Resume</span>
-      </a>
+      <div className="ml-1 flex items-center gap-2 lg:ml-8">
+        <a
+          className="flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100"
+          href={instance.url!}
+          download={fileName}
+        >
+          <ArrowDownTrayIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Download PDF</span>
+        </a>
+        <button
+          type="button"
+          className="flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100"
+          onClick={() =>
+            downloadPersistedStateAsJson(
+              fileName.replace(/ - Resume$/, " - JSON"),
+              persistedState,
+            )
+          }
+        >
+          <ArrowDownTrayIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Download JSON</span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -78,7 +99,7 @@ export const ResumeControlBarCSR = dynamic(
   () => Promise.resolve(ResumeControlBar),
   {
     ssr: false,
-  }
+  },
 );
 
 export const ResumeControlBarBorder = () => (

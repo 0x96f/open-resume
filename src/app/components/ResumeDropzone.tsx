@@ -4,6 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
 import {
   getHasUsedAppBefore,
+  parsePersistedStateFromJson,
   saveStateToLocalStorage,
 } from "lib/redux/local-storage";
 import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
@@ -13,10 +14,20 @@ import Image from "next/image";
 import { cx } from "lib/cx";
 import { deepClone } from "lib/deep-clone";
 
+type FileType = "pdf" | "json";
+
 const defaultFileState = {
   name: "",
   size: 0,
   fileUrl: "",
+  type: null as FileType | null,
+};
+
+const getFileType = (fileName: string): FileType | null => {
+  const lowerName = fileName.toLowerCase();
+  if (lowerName.endsWith(".pdf")) return "pdf";
+  if (lowerName.endsWith(".json")) return "json";
+  return null;
 };
 
 export const ResumeDropzone = ({
@@ -30,31 +41,37 @@ export const ResumeDropzone = ({
 }) => {
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
-  const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [hasUnsupportedFile, setHasUnsupportedFile] = useState(false);
+  const [hasInvalidJsonFile, setHasInvalidJsonFile] = useState(false);
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
+  const acceptsJson = !playgroundView;
 
   const setNewFile = (newFile: File) => {
     if (file.fileUrl) {
       URL.revokeObjectURL(file.fileUrl);
     }
 
+    const fileType = getFileType(newFile.name);
+    if (!fileType || (fileType === "json" && !acceptsJson)) {
+      setHasUnsupportedFile(true);
+      setHasInvalidJsonFile(false);
+      return;
+    }
+
+    setHasUnsupportedFile(false);
+    setHasInvalidJsonFile(false);
     const { name, size } = newFile;
     const fileUrl = URL.createObjectURL(newFile);
-    setFile({ name, size, fileUrl });
+    setFile({ name, size, fileUrl, type: fileType });
     onFileUrlChange(fileUrl);
   };
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
-      setHasNonPdfFile(false);
-      setNewFile(newFile);
-    } else {
-      setHasNonPdfFile(true);
-    }
+    setNewFile(newFile);
     setIsHoveredOnDropzone(false);
   };
 
@@ -68,10 +85,12 @@ export const ResumeDropzone = ({
 
   const onRemove = () => {
     setFile(defaultFileState);
+    setHasUnsupportedFile(false);
+    setHasInvalidJsonFile(false);
     onFileUrlChange("");
   };
 
-  const onImportClick = async () => {
+  const onImportPdfClick = async () => {
     const resume = await parseResumeFromPdf(file.fileUrl);
     const settings = deepClone(initialSettings);
 
@@ -92,6 +111,32 @@ export const ResumeDropzone = ({
 
     saveStateToLocalStorage({ resume, settings });
     router.push("/resume-builder");
+  };
+
+  const onImportJsonClick = async () => {
+    try {
+      const response = await fetch(file.fileUrl);
+      const parsedJson: unknown = await response.json();
+      const persistedState = parsePersistedStateFromJson(parsedJson);
+
+      if (!persistedState) {
+        setHasInvalidJsonFile(true);
+        return;
+      }
+
+      saveStateToLocalStorage(persistedState);
+      router.push("/resume-builder");
+    } catch {
+      setHasInvalidJsonFile(true);
+    }
+  };
+
+  const onImportClick = async () => {
+    if (file.type === "json") {
+      await onImportJsonClick();
+    } else {
+      await onImportPdfClick();
+    }
   };
 
   return (
@@ -132,7 +177,9 @@ export const ResumeDropzone = ({
                 !playgroundView && "text-lg font-semibold"
               )}
             >
-              Browse a pdf file or drop it here
+              {acceptsJson
+                ? "Browse a pdf or json file or drop it here"
+                : "Browse a pdf file or drop it here"}
             </p>
             <p className="flex text-sm text-gray-500">
               <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
@@ -167,12 +214,16 @@ export const ResumeDropzone = ({
                 <input
                   type="file"
                   className="sr-only"
-                  accept=".pdf"
+                  accept={acceptsJson ? ".pdf,.json" : ".pdf"}
                   onChange={onInputChange}
                 />
               </label>
-              {hasNonPdfFile && (
-                <p className="mt-6 text-red-400">Only pdf file is supported</p>
+              {hasUnsupportedFile && (
+                <p className="mt-6 text-red-400">
+                  {acceptsJson
+                    ? "Only pdf and json files are supported"
+                    : "Only pdf file is supported"}
+                </p>
               )}
             </>
           ) : (
@@ -186,9 +237,20 @@ export const ResumeDropzone = ({
                   Import and Continue <span aria-hidden="true">→</span>
                 </button>
               )}
+              {hasInvalidJsonFile && (
+                <p className="mt-6 text-red-400">
+                  Invalid JSON file. Use a file exported from OpenResume.
+                </p>
+              )}
               <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
-                Note: {!playgroundView ? "Import" : "Parser"} works best on
-                single column resume
+                {file.type === "json" ? (
+                  <>Note: JSON import restores your saved resume and settings</>
+                ) : (
+                  <>
+                    Note: {!playgroundView ? "Import" : "Parser"} works best on
+                    single column resume
+                  </>
+                )}
               </p>
             </>
           )}

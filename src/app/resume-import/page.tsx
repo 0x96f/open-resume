@@ -1,8 +1,10 @@
 "use client";
 import { useState, useSyncExternalStore } from "react";
 import { getHasUsedAppBefore } from "lib/redux/local-storage";
+import { resetAppState } from "lib/redux/hooks";
 import { ResumeDropzone } from "components/ResumeDropzone";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ImportResume() {
   const hasUsedAppBefore = useSyncExternalStore(
@@ -11,8 +13,14 @@ export default function ImportResume() {
     () => false
   );
   const [hasAddedResume, setHasAddedResume] = useState(false);
+  const router = useRouter();
   const onFileUrlChange = (fileUrl: string) => {
     setHasAddedResume(Boolean(fileUrl));
+  };
+
+  const handleStartOver = () => {
+    resetAppState();
+    router.push("/resume-builder");
   };
 
   return (
@@ -41,9 +49,12 @@ export default function ImportResume() {
           <>
             {!hasAddedResume && (
               <>
-                <SectionWithHeadingAndCreateButton
+                <SectionWithHeadingAndActions
                   heading="You have data saved in browser from prior session"
-                  buttonText="Continue where I left off"
+                  primaryButtonText="Continue where I left off"
+                  primaryHref="/resume-builder"
+                  secondaryButtonText="Start over"
+                  onSecondaryClick={handleStartOver}
                 />
                 <OrDivider />
               </>
@@ -70,6 +81,11 @@ const OrDivider = () => (
   </div>
 );
 
+const primaryButtonClassName =
+  "outline-theme-blue rounded-full bg-sky-500 px-6 pb-2 pt-1.5 text-base font-semibold text-white";
+const secondaryButtonClassName =
+  "outline-theme-blue rounded-full border border-gray-300 bg-white px-6 pb-2 pt-1.5 text-base font-semibold text-gray-900 shadow-sm hover:bg-gray-50";
+
 const SectionWithHeadingAndCreateButton = ({
   heading,
   buttonText,
@@ -78,15 +94,43 @@ const SectionWithHeadingAndCreateButton = ({
   buttonText: string;
 }) => {
   return (
+    <SectionWithHeadingAndActions
+      heading={heading}
+      primaryButtonText={buttonText}
+      primaryHref="/resume-builder"
+    />
+  );
+};
+
+const SectionWithHeadingAndActions = ({
+  heading,
+  primaryButtonText,
+  primaryHref,
+  secondaryButtonText,
+  onSecondaryClick,
+}: {
+  heading: string;
+  primaryButtonText: string;
+  primaryHref: string;
+  secondaryButtonText?: string;
+  onSecondaryClick?: () => void;
+}) => {
+  return (
     <>
       <p className="font-semibold text-gray-900">{heading}</p>
-      <div className="mt-5">
-        <Link
-          href="/resume-builder"
-          className="outline-theme-blue rounded-full bg-sky-500 px-6 pb-2 pt-1.5 text-base font-semibold text-white"
-        >
-          {buttonText}
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <Link href={primaryHref} className={primaryButtonClassName}>
+          {primaryButtonText}
         </Link>
+        {secondaryButtonText && onSecondaryClick && (
+          <button
+            type="button"
+            className={secondaryButtonClassName}
+            onClick={onSecondaryClick}
+          >
+            {secondaryButtonText}
+          </button>
+        )}
       </div>
     </>
   );

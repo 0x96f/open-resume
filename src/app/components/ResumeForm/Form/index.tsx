@@ -24,6 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   addSectionInForm,
+  clearSectionInForm,
   deleteSectionInFormByIdx,
   moveSectionInForm,
 } from "lib/redux/resumeSlice";
@@ -69,6 +70,9 @@ export const Form = ({
   const dispatch = useAppDispatch();
   const setShowForm = (showForm: boolean) => {
     dispatch(changeShowForm({ field: form, value: showForm }));
+    if (!showForm) {
+      dispatch(clearSectionInForm({ form }));
+    }
   };
   const setHeading = (heading: string) => {
     dispatch(changeFormHeading({ field: form, value: heading }));

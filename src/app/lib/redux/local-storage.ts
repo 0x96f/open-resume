@@ -5,7 +5,7 @@ import type { RootState } from "lib/redux/store";
 const LEGACY_LOCAL_STORAGE_KEY = "open-resume-state";
 const LOCAL_STORAGE_KEY = "open-resume-state:v1";
 
-type PersistedState = Pick<RootState, "resume" | "settings">;
+export type PersistedState = Pick<RootState, "resume" | "settings">;
 
 let cachedState: PersistedState | null | undefined;
 
@@ -73,3 +73,33 @@ export const saveStateToLocalStorage = (state: RootState) => {
 };
 
 export const getHasUsedAppBefore = () => Boolean(loadStateFromLocalStorage());
+
+export const clearPersistedState = () => {
+  try {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(LEGACY_LOCAL_STORAGE_KEY);
+  } catch {
+    // Ignore
+  }
+  cachedState = null;
+};
+
+export { parsePersistedStateFromJson } from "lib/redux/parse-persisted-state";
+
+export const downloadPersistedStateAsJson = (
+  fileName: string,
+  fallback?: PersistedState
+) => {
+  const state = loadStateFromLocalStorage() ?? fallback;
+  if (!state) return;
+
+  const blob = new Blob([JSON.stringify(state, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName.endsWith(".json") ? fileName : `${fileName}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+};
