@@ -72,7 +72,7 @@ const ResumeControlBar = ({
           download={fileName}
         >
           <ArrowDownTrayIcon className="h-4 w-4" />
-          <span className="whitespace-nowrap">Download PDF</span>
+          <span className="whitespace-nowrap">Save PDF</span>
         </a>
         <button
           type="button"
@@ -85,7 +85,7 @@ const ResumeControlBar = ({
           }
         >
           <ArrowDownTrayIcon className="h-4 w-4" />
-          <span className="whitespace-nowrap">Download JSON</span>
+          <span className="whitespace-nowrap">Save JSON</span>
         </button>
       </div>
     </div>

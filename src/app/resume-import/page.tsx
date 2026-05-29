@@ -29,7 +29,7 @@ export default function ImportResume() {
         {!hasUsedAppBefore ? (
           <>
             <h1 className="text-lg font-semibold text-gray-900">
-              Import data from an existing resume
+              Import a saved OpenResume file
             </h1>
             <ResumeDropzone
               onFileUrlChange={onFileUrlChange}
@@ -60,7 +60,7 @@ export default function ImportResume() {
               </>
             )}
             <h1 className="font-semibold text-gray-900">
-              Override data with a new resume
+              Override data with a new JSON file
             </h1>
             <ResumeDropzone
               onFileUrlChange={onFileUrlChange}
